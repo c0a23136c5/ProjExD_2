@@ -28,11 +28,43 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
+def kk_change(yoko, tate):
+    if(yoko, tate) == (0, -5):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -90, 1.0)
+        kk_img = pg.transform.flip(kk_img, True, False)
+
+    elif(yoko, tate) == (+5, -5):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 1.0)
+        kk_img = pg.transform.flip(kk_img, True, False)
+
+    elif(yoko, tate) == (+5, 0):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1.0)
+        kk_img = pg.transform.flip(kk_img, True, False)
+            
+    elif(yoko, tate) == (+5, +5):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 1.0)
+        kk_img = pg.transform.flip(kk_img, True, False)
+
+    elif(yoko,tate) == (0, +5):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 1.0)
+        kk_img = pg.transform.flip(kk_img, True, False)
+    
+    elif(yoko, tate) == (-5, +5):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 1.0)
+
+    elif(yoko, tate) == (-5, 0):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1.0)
+
+    elif(yoko, tate) == (-5, -5):
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 1.0)
+    return kk_img
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
-    bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    bg_img = pg.image.load("fig/pg_bg.jpg")   
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
@@ -46,7 +78,6 @@ def main():
     bb_rct = bb_img.get_rect()  # 爆弾Rect
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx, vy = +5, +5
-
 
 
     while True:
@@ -63,6 +94,10 @@ def main():
             if key_lst[k]:
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
+                kk_img = kk_change(sum_mv[0], sum_mv[1])
+                
+
+
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
