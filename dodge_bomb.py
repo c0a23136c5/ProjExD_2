@@ -4,14 +4,30 @@ import pygame as pg
 import random
 
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 1300, 800
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
 DELTA = {
     pg.K_UP:(0, -5),
     pg.K_DOWN:(0, +5),
     pg.K_LEFT:(-5, 0),
     pg.K_RIGHT:(+5, 0),
     }
+
+
+def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
+    """
+    引数：こうかとんRect，または，爆弾Rect
+    戻り値：真理値タプル（横方向，縦方向）
+    画面内ならTrue　画面外ならFalse
+    """
+    yoko, tate = True, True
+    if rct.left < 0 or WIDTH < rct.right:
+        yoko = False
+    if rct.top < 0 or HEIGHT < rct.bottom:
+        tate = False
+    return yoko, tate
 
 
 def main():
@@ -24,13 +40,15 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
 
+
     #爆弾の描画
-    bb_ing = pg.Surface((20, 20))
-    pg.draw.circle(bb_ing, (255, 0, 0), (10, 10), 10)
-    bb_ing.set_colorkey((0, 0, 0))
-    bb_rect = bb_ing.get_rect()
-    bb_rect.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
+    bb_img = pg.Surface((20, 20))
+    bb_img.set_colorkey((0, 0, 0))
+    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    bb_rct = bb_img.get_rect()  # 爆弾Rect
+    bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx, vy = +5, +5
+
 
 
     while True:
@@ -46,9 +64,18 @@ def main():
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        bb_rect.move_ip(vx, vy)
-        screen.blit(bb_ing, bb_rect)
+
+        bb_rct.move_ip(vx, vy)
+        yoko, tate = check_bound(bb_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
+        bb_rct.move_ip(vx, vy)#爆弾の動き
+        screen.blit(bb_img, bb_rct)#爆弾の動き
         pg.display.update()
         tmr += 1
         clock.tick(50)
