@@ -29,34 +29,37 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
 
 
 def kk_change(yoko, tate):
+    katamuki = 0
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), katamuki, 2.0)
     if(yoko, tate) == (0, -5):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -90, 1.0)
+        katamuki = -90
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), katamuki, 2.0)
         kk_img = pg.transform.flip(kk_img, True, False)
 
     elif(yoko, tate) == (+5, -5):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 2.0)
         kk_img = pg.transform.flip(kk_img, True, False)
 
     elif(yoko, tate) == (+5, 0):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
         kk_img = pg.transform.flip(kk_img, True, False)
             
     elif(yoko, tate) == (+5, +5):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 2.0)
         kk_img = pg.transform.flip(kk_img, True, False)
 
     elif(yoko,tate) == (0, +5):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 2.0)
         kk_img = pg.transform.flip(kk_img, True, False)
     
     elif(yoko, tate) == (-5, +5):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 2.0)
 
     elif(yoko, tate) == (-5, 0):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
 
     elif(yoko, tate) == (-5, -5):
-        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 1.0)
+        kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 2.0)
     return kk_img
 
 
@@ -64,7 +67,7 @@ def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")   
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1.0)
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
@@ -97,7 +100,6 @@ def main():
                 kk_img = kk_change(sum_mv[0], sum_mv[1])
                 
 
-
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
@@ -109,8 +111,8 @@ def main():
             vx *= -1
         if not tate:
             vy *= -1
-        bb_rct.move_ip(vx, vy)#爆弾の動き
-        screen.blit(bb_img, bb_rct)#爆弾の動き
+        bb_rct.move_ip(vx, vy)  #爆弾の動き
+        screen.blit(bb_img, bb_rct)  #爆弾の動き
         pg.display.update()
         tmr += 1
         clock.tick(50)
